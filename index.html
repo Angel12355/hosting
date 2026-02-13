@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Mi Amor 💖</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Georgia, serif;
+            background: linear-gradient(135deg, #ff9aa2, #ffb3c6);
+            color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .hidden { display: none !important; }
+        .floating-hearts {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.6;
+            animation: float linear infinite;
+            color: #ff3366;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-120vh) rotate(360deg); }
+        }
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+        .modal.show { opacity: 1; pointer-events: all; }
+        .modal-content {
+            background: white;
+            padding: 35px 25px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: popIn 0.5s ease-out;
+        }
+        @keyframes popIn { 0% { transform: scale(0.65); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .modal h2 { color: #e91e63; margin: 0 0 15px; }
+        .modal p { font-size: 1.2rem; margin: 10px 0 20px; }
+        .modal button {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background: #ff3366;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        #inicio {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        #corazon { font-size: 140px; animation: latir 1.2s infinite; }
+        @keyframes latir { 0%,100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+        button {
+            padding: 16px 40px;
+            font-size: 22px;
+            border: none;
+            border-radius: 50px;
+            margin: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        #btnSi {
+            background: #ff3366;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(255,51,102,0.6);
+        }
+        #btnNo {
+            background: #ff6b81;
+            color: white;
+            position: absolute;
+            transform: translate(-50%, -50%);
+        }
+        #carta { width: 100%; text-align: center; padding: 20px 10px; }
+        #carta-container {
+            perspective: 1000px;
+            width: min(320px, 85vw);
+            height: 220px;
+            margin: 40px auto;
+            position: relative;
+        }
+        .envelope {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s ease-in-out;
+        }
+        .envelope.open { transform: rotateX(30deg); }
+        .flap {
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            background: #e91e63;
+            top: 0;
+            transform-origin: bottom;
+            transition: transform 1.2s ease-in-out;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            z-index: 3;
+        }
+        .envelope.open .flap { transform: rotateX(180deg); }
+        .envelope-body {
+            position: absolute;
+            inset: 0;
+            background: #f48fb1;
+            border-radius: 10px 10px 0 0;
+            z-index: 1;
+        }
+        .letter-placeholder {
+            position: absolute;
+            width: 90%;
+            height: 70%;
+            background: white;
+            left: 5%;
+            top: 15%;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease 0.6s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #e91e63;
+            cursor: pointer;
+        }
+        .envelope.open .letter-placeholder { opacity: 1; transform: translateY(0); }
+        #sobre-abierto {
+            position: relative;
+            width: min(360px, 90vw);
+            height: 480px;
+            background: #fff;
+            margin: 40px auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            overflow: hidden;
+            display: none;
+        }
+        .hoja-tab {
+            position: absolute;
+            width: 86%;
+            height: 80px;
+            background: #ffe5ec;
+            border-radius: 8px;
+            left: 7%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #e91e63;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 5;
+        }
+        .hoja-tab:hover { transform: translateY(-8px) scale(1.03); box-shadow: 0 8px 20px rgba(255,105,180,0.4); }
+        #tab1 { top: 20px; }
+        #tab2 { top: 110px; }
+        #tab3 { top: 200px; }
+        #tab4 { top: 290px; }
+        .hoja-content {
+            background: white;
+            max-width: 720px;
+            margin: 30px auto;
+            padding: 40px 25px;
+            border-radius: 16px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+            position: relative;
+            display: none;
+        }
+        .hoja-content h2 { color: #e91e63; text-align: center; margin-bottom: 25px; }
+        .hoja-content p {
+            line-height: 1.8;
+            font-size: 1.18rem;
+            color: #444;
+            margin: 0 0 20px;
+        }
+        #volver-sobre {
+            display: block;
+            margin: 40px auto 0;
+            padding: 14px 40px;
+            background: #ff6699;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        #juego {
+            background: #fff0f5;
+            border-radius: 12px;
+            margin: 25px auto;
+            display: block;
+            touch-action: none;
+            max-width: 100%;
+        }
+        #estado { font-size: 22px; font-weight: bold; color: #e91e63; text-align: center; margin: 15px 0; }
+        .galeria-fotos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin: 35px 0;
+            padding: 0 15px;
+        }
+        .foto-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(255, 51, 102, 0.3);
+            transition: all 0.4s ease;
+        }
+        .foto-item:hover {
+            transform: scale(1.06) rotate(2deg);
+            box-shadow: 0 15px 35px rgba(255, 51, 102, 0.45);
+        }
+        .foto-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 18px;
+        }
+        .video-container {
+            text-align: center;
+            margin: 50px 0 40px;
+            position: relative;
+            z-index: 2;
+        }
+        .video-container h3 {
+            color: #e91e63;
+            font-size: 1.8rem;
+            margin-bottom: 18px;
+            text-shadow: 0 2px 8px rgba(255,51,102,0.3);
+        }
+        video {
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(255,51,102,0.35);
+            max-width: 100%;
+            background: #000;
+        }
+        .corazones-hoja {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+        @keyframes caidaSuave {
+            0% { transform: translateY(-10%) rotate(0deg); opacity: 0.7; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+        #confeti {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 20;
+        }
+        /* Estilos para la contraseña */
+        #password-prompt {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        #password-box {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        #password-box h3 { color: #e91e63; margin: 0 0 20px; }
+        #password-input {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.4rem;
+            text-align: center;
+            border: 2px solid #ff99ac;
+            border-radius: 12px;
+            margin: 15px 0 25px;
+            font-family: monospace;
+        }
+        #password-btn {
+            padding: 14px 50px;
+            font-size: 1.2rem;
+            background: #ff3366;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        #password-btn:hover { background: #e91e63; transform: scale(1.05); }
+        #password-error {
+            color: #d32f2f;
+            margin-top: 12px;
+            font-size: 1.1rem;
+            min-height: 1.4em;
+        }
+        @media (max-width: 500px) {
+            button { padding: 14px 32px; font-size: 20px; }
+            #corazon { font-size: 100px; }
+            h1 { font-size: 2.4rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="floating-hearts" id="heartsBg"></div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle"></h2>
+        <p id="modalMessage"></p>
+        <button id="modalBtn">Jugar de nuevo 💕</button>
+    </div>
+</div>
+
+<div id="inicio">
+    <div id="corazon">❤️</div>
+    <h1 style="font-size:3.2rem; margin:25px 0;">¿Quieres ser mi San Valentín?</h1>
+    <button id="btnSi">Sí 💖</button>
+    <button id="btnNo">No 😢</button>
+</div>
+
+<div id="carta" class="hidden">
+    <h2 style="color:white; margin-bottom:20px;">Tu carta especial 💌</h2>
+    <div id="carta-container">
+        <div class="envelope" id="envelope">
+            <div class="flap"></div>
+            <div class="envelope-body"></div>
+            <div class="letter-placeholder">Toca para abrir...</div>
+        </div>
+    </div>
+
+    <div id="sobre-abierto">
+        <div class="hoja-tab" id="tab1">Hoja 1 💌</div>
+        <div class="hoja-tab" id="tab2">Hoja 2 🎮</div>
+        <div class="hoja-tab" id="tab3">Hoja 3 🎞️💕</div>
+        <div class="hoja-tab" id="tab4">Hoja 4 📅</div>
+    </div>
+
+    <!-- Hoja 1 -->
+    <div class="hoja-content" id="contenido1">
+        <h2>Hoja 1 💌</h2>
+        <p>Para ti mi cachentoncita hermosha,</p>
+        <!-- Aquí puedes poner tu texto romántico -->
+        <p style="text-align: right; margin-top: 35px; font-style: italic; color: #e91e63; font-weight: bold; font-size: 1.3rem;">
+            Con todo mi amor,<br>Siempre tuyo ❤️
+        </p>
+        <button class="volver-sobre">Volver al sobre</button>
+    </div>
+
+    <!-- Hoja 2 - Juego -->
+    <div class="hoja-content" id="contenido2">
+        <h2>Hoja 2 – Jueguito nuestro 💕</h2>
+        <p style="text-align:center; margin-bottom:20px;">Recolecta 20 corazones ❤️ • Tienes 3 vidas<br><small>Desliza el dedo sobre el canvas para mover el corazoncito</small></p>
+        <canvas id="juego" width="460" height="460"></canvas>
+        <p id="estado">Corazones: 0 | Vidas: 3</p>
+        <button class="volver-sobre">Volver al sobre</button>
+    </div>
+
+    <!-- Hoja 3 - Sin protección ahora -->
+    <div class="hoja-content" id="contenido3">
+        <div class="corazones-hoja" id="corazones3"></div>
+        <h2>Nuestros momentos favoritos 🎞️💖</h2>
+        <div class="galeria-fotos">
+            <div class="foto-item"><img src="foto1.jpg" alt="Momento 1"></div>
+            <div class="foto-item"><img src="foto2.jpg" alt="Momento 2"></div>
+            <div class="foto-item"><img src="foto3.jpg" alt="Momento 3"></div>
+            <div class="foto-item"><img src="foto4.jpg" alt="Momento 4"></div>
+        </div>
+        <div class="video-container">
+            <h3>Nuestro video especial 💞✨</h3>
+            <video id="video-romantico" controls width="640" height="360" poster="video-poster.jpg"
+                   style="border-radius: 20px; box-shadow: 0 12px 40px rgba(255,51,102,0.35); max-width: 100%; background: #000;">
+                <source src="nuestro-video.mp4" type="video/mp4">
+                Tu navegador no soporta videos.
+            </video>
+            <p style="font-style: italic; color: #e91e63; margin-top: 15px; font-size: 1.15rem;">
+                Mi cachentoncita hermosha ❤️<br><small>Somos tu y yooo mi amor</small>
+            </p>
+        </div>
+        <p style="text-align: center; font-size: 1.4rem; color: #e91e63; margin: 30px 0; font-style: italic;">
+            Estas fotos me hacen sonreír cada vez que las veo...<br>Porque cada una guarda un pedacito de nosotros 💕
+        </p>
+        <div style="text-align:center; margin: 30px 0;">
+            <audio id="audio" src="musica.mp3" loop></audio>
+            <button id="btnPlay">▶ Reproducir</button>
+            <button id="btnPause">⏸ Pausar</button>
+        </div>
+        <button class="volver-sobre">Volver al sobre</button>
+    </div>
+
+    <!-- Hoja 4 - PROTEGIDA con contraseña 160225 -->
+    <div class="hoja-content" id="contenido4">
+        <div class="corazones-hoja" id="corazones4"></div>
+        <h2 style="color: #e91e63; text-align: center; margin-bottom: 30px; position: relative; z-index: 2;">
+            Nuestro tiempo juntos 💕📆
+        </h2>
+        <div id="contenedor-dias" style="text-align: center; padding: 30px 20px; position: relative; z-index: 2; opacity: 0; transition: opacity 1.2s ease-out;">
+            <div style="font-size: 6rem; font-weight: bold; color: #ff3366; margin: 20px 0; text-shadow: 0 8px 25px rgba(255,51,102,0.4);">
+                365
+            </div>
+            <p style="font-size: 2.1rem; color: #e91e63; margin: 10px 0 15px; font-weight: bold;">
+                días llevamos conociendonos, mi amor 💖
+            </p>
+            <p style="font-size: 1.45rem; color: #ff4d88; margin: 20px 0 35px; font-style: italic; line-height: 1.6; max-width: 90%; margin-left: auto; margin-right: auto;">
+                Este dia es de lo mejores dias que puee existir por que hoy llevo un año conociendo al amor de mi vida...<br>
+                <span style="color: #e91e63; font-weight: bold;">Aunque la distancia nos separe físicamente, cada día que pasa nos une más el corazón. Cada mensaje, cada llamada, cada te extraño ha construido algo más fuerte que cualquier kilómetro.</span><br><br>
+                Mañana no celebramos solo un año... celebramos que el amor verdadero no entiende de mapas ni de tiempo, solo de sentirte cerca aunque estés lejos ❤️
+            </p>
+            <div style="margin: 40px auto; padding: 25px; background: rgba(255, 51, 102, 0.08); border-radius: 20px; border: 2px dashed #ff6699; max-width: 95%;">
+                <p style="font-size: 1.65rem; color: #e91e63; font-weight: bold; margin: 0 0 18px;">
+                    ¡Mañana es nuestro día, mi cachentoncita hermosha! 💕🎂
+                </p>
+                <p style="font-size: 1.25rem; color: #444; line-height: 1.6;">
+                    Gracias por elegirme cada día, por aguantar las madrugadas, las diferencias horarias y por hacerme creer que el amor a distancia también puede ser el más bonito del mundo.<br><br>
+                    Ti amo mutuuuuu × infinitamente ❤️<br>
+                    Siempre tuyo, aunque estemos a kilómetros.
+                </p>
+            </div>
+            <button class="volver-sobre">Volver al sobre</button>
+        </div>
+    </div>
+</div>
+
+<canvas id="confeti"></canvas>
+
+<!-- Prompt de contraseña (ahora para Hoja 4) -->
+<div id="password-prompt">
+    <div id="password-box">
+        <h3>Hoja 4 está protegida 💕🔒</h3>
+        <p>Ingresa el código para ver nuestro conteo especial</p>
+        <input type="password" id="password-input" placeholder="Código secreto" maxlength="6">
+        <button id="password-btn">Entrar 💖</button>
+        <div id="password-error"></div>
+    </div>
+</div>
+
+<script>
+// Fondo corazones
+function createFloatingHeart() {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = Math.random() > 0.5 ? "❤️" : "💕";
+    h.style.left = Math.random()*100 + "vw";
+    h.style.animationDuration = (Math.random()*12 + 14) + "s";
+    h.style.animationDelay = Math.random()*4 + "s";
+    document.getElementById("heartsBg").appendChild(h);
+    setTimeout(() => h.remove(), 35000);
+}
+setInterval(createFloatingHeart, 900);
+
+// Botón Sí / No
+let siSize = 1;
+const btnNo = document.getElementById("btnNo");
+const btnSi = document.getElementById("btnSi");
+btnNo.style.top = "65%";
+btnNo.style.left = "50%";
+const moverNo = () => {
+    btnNo.style.top = (Math.random()*70 + 15) + "%";
+    btnNo.style.left = (Math.random()*80 + 10) + "%";
+    siSize += 0.24;
+    btnSi.style.transform = `scale(${siSize})`;
+};
+btnNo.onmouseover = moverNo;
+btnNo.ontouchstart = e => { e.preventDefault(); moverNo(); };
+btnSi.onclick = btnSi.ontouchend = e => {
+    e?.preventDefault();
+    document.getElementById("inicio").classList.add("hidden");
+    document.getElementById("carta").classList.remove("hidden");
+};
+
+// Abrir sobre
+document.getElementById("envelope").addEventListener("click", () => {
+    const env = document.getElementById("envelope");
+    if (!env.classList.contains("open")) {
+        env.classList.add("open");
+        setTimeout(() => {
+            env.style.display = "none";
+            document.getElementById("sobre-abierto").style.display = "block";
+        }, 1200);
+    }
+});
+
+// Corazones por hoja
+function iniciarCorazonesHoja(contenedorId) {
+    const cont = document.getElementById(contenedorId);
+    if (!cont) return;
+    const interval = setInterval(() => {
+        if (document.getElementById(contenedorId.replace("corazones", "contenido")).style.display !== "block") {
+            clearInterval(interval);
+            return;
+        }
+        const h = document.createElement("div");
+        h.textContent = Math.random() > 0.5 ? "💕" : "❤️";
+        h.style.position = "absolute";
+        h.style.fontSize = (Math.random()*28 + 18) + "px";
+        h.style.left = Math.random()*100 + "%";
+        h.style.top = "-40px";
+        h.style.opacity = Math.random()*0.5 + 0.4;
+        h.style.color = "#ff3366";
+        h.style.pointerEvents = "none";
+        h.style.animation = `caidaSuave ${Math.random()*9 + 10}s linear forwards`;
+        cont.appendChild(h);
+        setTimeout(() => h.remove(), 16000);
+    }, 1100);
+    return interval;
+}
+
+// Manejo de pestañas + contraseña SOLO en hoja 4 (índice 3)
+const CODIGO_CORRECTO = "160225";
+
+document.querySelectorAll(".hoja-tab").forEach((tab, i) => {
+    tab.addEventListener("click", () => {
+        if (i === 3) { // Hoja 4 → índice 3
+            document.getElementById("password-prompt").style.display = "flex";
+            document.getElementById("password-input").value = "";
+            document.getElementById("password-error").textContent = "";
+            document.getElementById("password-input").focus();
+        } else {
+            document.getElementById("sobre-abierto").style.display = "none";
+            document.getElementById(`contenido${i+1}`).style.display = "block";
+            if (i === 1) loop(); // juego
+            if (i === 3) document.getElementById("contenedor-dias").style.opacity = "1";
+            if (i === 2 || i === 3) {
+                iniciarCorazonesHoja(`corazones${i+1}`);
+                if (i === 2) document.getElementById("audio")?.load();
+            }
+        }
+    });
+});
+
+document.getElementById("password-btn").addEventListener("click", validarCodigo);
+document.getElementById("password-input").addEventListener("keypress", e => {
+    if (e.key === "Enter") validarCodigo();
+});
+
+function validarCodigo() {
+    const input = document.getElementById("password-input").value.trim();
+    const errorEl = document.getElementById("password-error");
+    if (input === CODIGO_CORRECTO) {
+        document.getElementById("password-prompt").style.display = "none";
+        document.getElementById("sobre-abierto").style.display = "none";
+        document.getElementById("contenido4").style.display = "block";
+        document.getElementById("contenedor-dias").style.opacity = "1";
+        iniciarCorazonesHoja("corazones4");
+    } else {
+        errorEl.textContent = "Código incorrecto 💔 Inténtalo de nuevo...";
+        setTimeout(() => { errorEl.textContent = ""; }, 2800);
+    }
+}
+
+// Volver al sobre
+document.querySelectorAll(".volver-sobre").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.querySelectorAll(".hoja-content").forEach(c => c.style.display = "none");
+        document.getElementById("sobre-abierto").style.display = "block";
+        document.getElementById("audio")?.pause();
+    });
+});
+
+// Pausar música al reproducir video
+const video = document.getElementById("video-romantico");
+const audio = document.getElementById("audio");
+if (video && audio) {
+    video.addEventListener('play', () => audio.pause());
+}
+
+// Controles de audio
+document.getElementById("btnPlay")?.addEventListener("click", () => {
+    audio.play().catch(() => alert("Toca de nuevo tras interactuar."));
+});
+document.getElementById("btnPause")?.addEventListener("click", () => audio?.pause());
+
+// Juego
+const canvas = document.getElementById("juego");
+const ctx = canvas.getContext("2d");
+let corazonesRecolectados = 0, vidas = 3;
+let jugador = { x: 230, y: 420 };
+let items = [];
+ctx.font = "48px serif";
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
+
+function crearItem() {
+    items.push({ x: Math.random() * (canvas.width - 100) + 50, y: -60, tipo: Math.random() < 0.7 ? "corazon" : "bomba" });
+}
+setInterval(crearItem, 700);
+
+canvas.addEventListener("touchmove", e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    const r = canvas.getBoundingClientRect();
+    jugador.x = t.clientX - r.left;
+    jugador.x = Math.max(40, Math.min(canvas.width - 40, jugador.x));
+}, { passive: false });
+
+canvas.addEventListener("mousemove", e => {
+    const r = canvas.getBoundingClientRect();
+    jugador.x = e.clientX - r.left;
+    jugador.x = Math.max(40, Math.min(canvas.width - 40, jugador.x));
+});
+
+function mostrarModal(tit, msg, win = false) {
+    document.getElementById("modalTitle").textContent = tit;
+    document.getElementById("modalMessage").textContent = msg;
+    document.getElementById("modal").classList.add("show");
+    if (win) lanzarConfeti();
+}
+
+document.getElementById("modalBtn").onclick = () => {
+    document.getElementById("modal").classList.remove("show");
+    reiniciarJuego();
+};
+
+function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "60px serif";
+    ctx.fillStyle = "#ff69b4";
+    ctx.fillText("💗", jugador.x, jugador.y);
+    items = items.filter(it => {
+        it.y += 4.5;
+        if (it.tipo === "corazon") {
+            ctx.fillStyle = "#ff3366";
+            ctx.fillText("❤️", it.x, it.y);
+        } else {
+            ctx.fillStyle = "#000";
+            ctx.fillText("💣", it.x, it.y);
+        }
+        const d = Math.hypot(it.x - jugador.x, it.y - jugador.y);
+        if (d < 55) {
+            if (it.tipo === "corazon") corazonesRecolectados++;
+            else vidas--;
+            document.getElementById("estado").textContent = `Corazones: ${corazonesRecolectados} | Vidas: ${vidas}`;
+            if (vidas <= 0) {
+                mostrarModal("¡Uy, amorcito! 😢", "Yo sé que tú puedes, mi cachentoncita hermosa... Ti amo mutu 💕", false);
+                return false;
+            }
+            if (corazonesRecolectados >= 20) {
+                mostrarModal("¡Ganaste, mi amor! 💖", "Eres la mejor del mundo, cachentoncita. Ti amo mutu ❤️", true);
+                return false;
+            }
+            return false;
+        }
+        return it.y < canvas.height + 80;
+    });
+    requestAnimationFrame(loop);
+}
+
+function reiniciarJuego() {
+    corazonesRecolectados = 0;
+    vidas = 3;
+    items = [];
+    jugador.x = canvas.width / 2;
+    document.getElementById("estado").textContent = "Corazones: 0 | Vidas: 3";
+}
+
+// Confeti
+const confetiCanvas = document.getElementById("confeti");
+const confetiCtx = confetiCanvas.getContext("2d");
+confetiCanvas.width = window.innerWidth;
+confetiCanvas.height = window.innerHeight;
+window.addEventListener("resize", () => {
+    confetiCanvas.width = window.innerWidth;
+    confetiCanvas.height = window.innerHeight;
+});
+let particles = [];
+
+function crearParticula() {
+    return {
+        x: Math.random() * confetiCanvas.width,
+        y: -20,
+        size: Math.random() * 10 + 8,
+        speedY: Math.random() * 5 + 3,
+        rotation: Math.random() * 360,
+        rotSpeed: Math.random() * 10 - 5,
+        color: ["#ff3366","#ff69b4","#ffb3c6","#fff0f5"][Math.floor(Math.random()*4)],
+        emoji: Math.random() > 0.5 ? "❤️" : "💕"
+    };
+}
+
+function lanzarConfeti() {
+    for (let i = 0; i < 100; i++) particles.push(crearParticula());
+}
+
+function animarConfeti() {
+    confetiCtx.clearRect(0, 0, confetiCanvas.width, confetiCanvas.height);
+    particles = particles.filter(p => {
+        p.y += p.speedY;
+        p.rotation += p.rotSpeed;
+        p.x += Math.sin(p.y / 50) * 2;
+        confetiCtx.save();
+        confetiCtx.translate(p.x, p.y);
+        confetiCtx.rotate(p.rotation * Math.PI / 180);
+        confetiCtx.font = p.size + "px serif";
+        confetiCtx.fillStyle = p.color;
+        confetiCtx.fillText(p.emoji, 0, 0);
+        confetiCtx.restore();
+        return p.y < confetiCanvas.height + 50;
+    });
+    if (particles.length > 0) requestAnimationFrame(animarConfeti);
+}
+animarConfeti();
+</script>
+</body>
+</html>
