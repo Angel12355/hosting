@@ -287,7 +287,6 @@
             pointer-events: none;
             z-index: 20;
         }
-        /* Estilos para la contraseña */
         #password-prompt {
             position: fixed;
             inset: 0;
@@ -342,9 +341,7 @@
     </style>
 </head>
 <body>
-
 <div class="floating-hearts" id="heartsBg"></div>
-
 <div id="modal" class="modal">
     <div class="modal-content">
         <h2 id="modalTitle"></h2>
@@ -352,14 +349,12 @@
         <button id="modalBtn">Jugar de nuevo 💕</button>
     </div>
 </div>
-
 <div id="inicio">
     <div id="corazon">❤️</div>
     <h1 style="font-size:3.2rem; margin:25px 0;">¿Quieres ser mi San Valentín?</h1>
     <button id="btnSi">Sí 💖</button>
     <button id="btnNo">No 😢</button>
 </div>
-
 <div id="carta" class="hidden">
     <h2 style="color:white; margin-bottom:20px;">Tu carta especial 💌</h2>
     <div id="carta-container">
@@ -369,25 +364,21 @@
             <div class="letter-placeholder">Toca para abrir...</div>
         </div>
     </div>
-
     <div id="sobre-abierto">
         <div class="hoja-tab" id="tab1">Hoja 1 💌</div>
         <div class="hoja-tab" id="tab2">Hoja 2 🎮</div>
         <div class="hoja-tab" id="tab3">Hoja 3 🎞️💕</div>
         <div class="hoja-tab" id="tab4">Hoja 4 📅</div>
     </div>
-
     <!-- Hoja 1 -->
     <div class="hoja-content" id="contenido1">
         <h2>Hoja 1 💌</h2>
         <p>Para ti mi cachentoncita hermosha,</p>
-        <!-- Aquí puedes poner tu texto romántico -->
         <p style="text-align: right; margin-top: 35px; font-style: italic; color: #e91e63; font-weight: bold; font-size: 1.3rem;">
             Con todo mi amor,<br>Siempre tuyo ❤️
         </p>
         <button class="volver-sobre">Volver al sobre</button>
     </div>
-
     <!-- Hoja 2 - Juego -->
     <div class="hoja-content" id="contenido2">
         <h2>Hoja 2 – Jueguito nuestro 💕</h2>
@@ -396,8 +387,7 @@
         <p id="estado">Corazones: 0 | Vidas: 3</p>
         <button class="volver-sobre">Volver al sobre</button>
     </div>
-
-    <!-- Hoja 3 - Sin protección ahora -->
+    <!-- Hoja 3 -->
     <div class="hoja-content" id="contenido3">
         <div class="corazones-hoja" id="corazones3"></div>
         <h2>Nuestros momentos favoritos 🎞️💖</h2>
@@ -428,43 +418,72 @@
         </div>
         <button class="volver-sobre">Volver al sobre</button>
     </div>
-
-    <!-- Hoja 4 - PROTEGIDA con contraseña 160225 -->
+    <!-- Hoja 4 - Versión final más romántica y hablando de HOY -->
     <div class="hoja-content" id="contenido4">
         <div class="corazones-hoja" id="corazones4"></div>
-        <h2 style="color: #e91e63; text-align: center; margin-bottom: 30px; position: relative; z-index: 2;">
+        <h2 style="color: #e91e63; text-align: center; margin-bottom: 20px; position: relative; z-index: 2;">
             Nuestro tiempo juntos 💕📆
         </h2>
+
+        <div style="text-align: center; padding: 0 20px 40px; position: relative; z-index: 2;">
+            <p style="font-size: 2.6rem; font-weight: bold; color: #e91e63; margin: 25px 0 35px; font-style: italic; text-shadow: 0 3px 12px rgba(233,30,99,0.4);">
+                ¿Puedo ser tu novio? 💍❤️
+            </p>
+
+            <p style="font-size: 1.55rem; color: #ff3366; font-weight: 600; margin: 0 0 28px; letter-spacing: 0.5px;">
+                Hoy, mi cachentoncita hermosa, es el día más maravilloso de mi vida...
+            </p>
+
+            <p style="font-size: 1.32rem; color: #333; line-height: 1.75; max-width: 92%; margin: 0 auto 40px;">
+                Hoy te lo pregunto con el corazón en la mano, después de tantos mensajes a deshoras, tantas risas que curan todo, tantos "te extraño" que me quitan el sueño...<br><br>
+
+                Esperé el momento perfecto porque quería que fuera inolvidable,por que hoy 15 de febrero te conoci, hoy conoci el amor de mi vida un año atras por eso este momento lo espere tanto porque tú mereces lo más bonito del universo.<br>
+                Cada vez que veo tu nombre en la pantalla, mi mundo se ilumina. Cada vez que escucho tu voz, siento que todo tiene sentido.<br><br>
+
+                <span style="color: #e91e63; font-weight: bold; font-size: 1.48rem; display: block; margin: 25px 0;">
+                    No quiero seguir siendo solo el que te escribe menos diash y las menas nochesh<br>
+                    Quiero ser el que te dé todos los beshos que aún no te he dado, el que te abrace fuerte cuando por fin estemos cerca,<br>
+                    el que te prometa cuidarte, mimarte y amarte todos los días que nos regale la vida.
+                </span><br>
+
+                Mi cachentoncita, mi amorcito, mi vida entera...<br>
+                TE AMO COMO NO TIENES UNA IDEA.<br>
+                ¿Me permites ser tu pancita de winnie poh? 🥹💕✨
+            </p>
+
+            <div style="font-size: 4rem; margin: 35px 0 20px; opacity: 0.92;">
+            </div>
+        </div>
+
         <div id="contenedor-dias" style="text-align: center; padding: 30px 20px; position: relative; z-index: 2; opacity: 0; transition: opacity 1.2s ease-out;">
-            <div style="font-size: 6rem; font-weight: bold; color: #ff3366; margin: 20px 0; text-shadow: 0 8px 25px rgba(255,51,102,0.4);">
+            <div style="font-size: 6.5rem; font-weight: bold; color: #ff3366; margin: 25px 0; text-shadow: 0 8px 25px rgba(255,51,102,0.45);">
                 365
             </div>
-            <p style="font-size: 2.1rem; color: #e91e63; margin: 10px 0 15px; font-weight: bold;">
-                días llevamos conociendonos, mi amor 💖
+            <p style="font-size: 2.2rem; color: #e91e63; margin: 10px 0 18px; font-weight: bold;">
+                días llevamos conociéndonos, mi amor eterno 💖
             </p>
-            <p style="font-size: 1.45rem; color: #ff4d88; margin: 20px 0 35px; font-style: italic; line-height: 1.6; max-width: 90%; margin-left: auto; margin-right: auto;">
-                Este dia es de lo mejores dias que puee existir por que hoy llevo un año conociendo al amor de mi vida...<br>
-                <span style="color: #e91e63; font-weight: bold;">Aunque la distancia nos separe físicamente, cada día que pasa nos une más el corazón. Cada mensaje, cada llamada, cada te extraño ha construido algo más fuerte que cualquier kilómetro.</span><br><br>
-                Mañana no celebramos solo un año... celebramos que el amor verdadero no entiende de mapas ni de tiempo, solo de sentirte cerca aunque estés lejos ❤️
+            <p style="font-size: 1.48rem; color: #ff4d88; margin: 20px 0 40px; font-style: italic; line-height: 1.7; max-width: 90%; margin-left: auto; margin-right: auto;">
+                Hoy es uno de los días más importantes de mi existencia... porque hoy llevo exactamente un año conociendo al amor de mi vida.<br><br>
+                <span style="color: #e91e63; font-weight: bold; font-size: 1.3rem;">
+                    Aunque la distancia nos haya separado físicamente, cada mensaje, cada llamada, cada "te extraño" ha tejido un lazo más fuerte que cualquier kilómetro.
+                </span><br><br>
+                Hoy no celebramos solo 365 días... celebramos que el amor verdadero no necesita verse para sentirse, y que el nuestro es de los que duran para siempre ❤️
             </p>
-            <div style="margin: 40px auto; padding: 25px; background: rgba(255, 51, 102, 0.08); border-radius: 20px; border: 2px dashed #ff6699; max-width: 95%;">
-                <p style="font-size: 1.65rem; color: #e91e63; font-weight: bold; margin: 0 0 18px;">
-                    ¡Mañana es nuestro día, mi cachentoncita hermosha! 💕🎂
+            <div style="margin: 45px auto; padding: 30px; background: rgba(255, 51, 102, 0.09); border-radius: 24px; border: 2px dashed #ff6699; max-width: 95%;">
+                <p style="font-size: 1.75rem; color: #e91e63; font-weight: bold; margin: 0 0 22px;">
+                    ¡Hoy es nuestro día, mi cachentoncita hermosha! 💕🎂✨
                 </p>
-                <p style="font-size: 1.25rem; color: #444; line-height: 1.6;">
-                    Gracias por elegirme cada día, por aguantar las madrugadas, las diferencias horarias y por hacerme creer que el amor a distancia también puede ser el más bonito del mundo.<br><br>
-                    Ti amo mutuuuuu × infinitamente ❤️<br>
-                    Siempre tuyo, aunque estemos a kilómetros.
+                <p style="font-size: 1.3rem; color: #333; line-height: 1.65;">
+                    Gracias por elegirme cada día, por aguantar mis locuras, las madrugadas eternas, las diferencias horarias y por hacerme creer que el amor a distancia puede ser el más mágico y bonito del mundo.<br><br>
+                    Ti amo mutuuuuu × infinitamente × por siempre ❤️<br>
+                   shempre tuyo amorchito mio
                 </p>
             </div>
             <button class="volver-sobre">Volver al sobre</button>
         </div>
     </div>
 </div>
-
 <canvas id="confeti"></canvas>
-
-<!-- Prompt de contraseña (ahora para Hoja 4) -->
 <div id="password-prompt">
     <div id="password-box">
         <h3>Hoja 4 está protegida 💕🔒</h3>
@@ -546,12 +565,11 @@ function iniciarCorazonesHoja(contenedorId) {
     return interval;
 }
 
-// Manejo de pestañas + contraseña SOLO en hoja 4 (índice 3)
+// Manejo de pestañas + contraseña
 const CODIGO_CORRECTO = "160225";
-
 document.querySelectorAll(".hoja-tab").forEach((tab, i) => {
     tab.addEventListener("click", () => {
-        if (i === 3) { // Hoja 4 → índice 3
+        if (i === 3) {
             document.getElementById("password-prompt").style.display = "flex";
             document.getElementById("password-input").value = "";
             document.getElementById("password-error").textContent = "";
@@ -559,7 +577,7 @@ document.querySelectorAll(".hoja-tab").forEach((tab, i) => {
         } else {
             document.getElementById("sobre-abierto").style.display = "none";
             document.getElementById(`contenido${i+1}`).style.display = "block";
-            if (i === 1) loop(); // juego
+            if (i === 1) loop();
             if (i === 3) document.getElementById("contenedor-dias").style.opacity = "1";
             if (i === 2 || i === 3) {
                 iniciarCorazonesHoja(`corazones${i+1}`);
@@ -611,7 +629,7 @@ document.getElementById("btnPlay")?.addEventListener("click", () => {
 });
 document.getElementById("btnPause")?.addEventListener("click", () => audio?.pause());
 
-// Juego
+// Juego (canvas)
 const canvas = document.getElementById("juego");
 const ctx = canvas.getContext("2d");
 let corazonesRecolectados = 0, vidas = 3;
